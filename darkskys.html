@@ -1,0 +1,97 @@
+<!doctype html>
+
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+
+  <title>Screensaver</title>
+
+  <style>
+    body { margin: 0; padding: 0 }
+
+    .iframe {
+      position: absolute;
+      top: 0;
+      left: 0;
+    }
+
+    .iframe p {
+      transition: all 1s ease;
+      opacity: 0;
+      display: inline-block;
+      position: relative;
+      margin: 0;
+      padding: 0;
+      bottom: 2.3em;
+      left: 1em;
+      color: rgba(20,20,20,0.6);
+      font-size: 72px;
+      font-weight: bold;
+      font-family: 'San Francisco', sans-serif;
+    }
+
+    .iframe iframe {
+      height: 100vh;
+      width: 100vw;
+      transition: all 1s ease;
+      -webkit-clip-path: polygon(0 0, 0 0, 0 100vh, 0 100vh);
+    }
+
+    .current iframe {
+      -webkit-clip-path: polygon(0 0, 100vw 0, 100vw 100vh, 0 100vh);
+    }
+
+    .previous iframe {
+      -webkit-clip-path: polygon(100vw 0, 100vw 0, 100vw 100vh, 100vw 100vh);
+    }
+
+    .current p {
+      opacity: 1;
+    }
+  </style>
+  <!--[if lt IE 9]>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html5shiv/3.7.3/html5shiv.js"></script>
+  <![endif]-->
+</head>
+
+<body>
+  <div class='iframe'>
+    <iframe width='100%' frameBorder='0' src='https://maps.darksky.net/@temperature,37.770,-122.429,11?embed=true&timeControl=false&fieldControl=false&defaultField=wind_gust&defaultUnits=_mph'></iframe>
+    <p>Wind Gust</p>
+  </div>
+  <div class='iframe current'>
+    <iframe width='100%' frameBorder='0' src='https://maps.darksky.net/@temperature,37.770,-122.429,11?embed=true&timeControl=false&fieldControl=false&defaultField=temperature&defaultUnits=_f'></iframe>
+    <p>Temperature</p>
+  </div>
+  <div class='iframe'>
+    <iframe width='100%' frameBorder='0' src='https://maps.darksky.net/@temperature,37.770,-122.429,11?embed=true&timeControl=false&fieldControl=false&defaultField=precipitation_rate&defaultUnits=_mmph'></iframe>
+    <p>Precipitation Forecast</p>
+  </div>
+
+  <script>
+    let iframes = document.getElementsByClassName('iframe')
+    let ticks = 0
+
+    let transition = function() {
+      let currentKey = ticks % iframes.length
+
+      Array.prototype.forEach.call(iframes, function(f, i) {
+        if (i === currentKey) {
+          f.classList.add('current')
+        } else {
+          if (f.classList.contains('current')) {
+            f.classList.add('previous')
+            f.classList.remove('current')
+          } else {
+            f.classList.remove('previous')
+          }
+        }
+      })
+
+      ticks ++
+    }
+
+    setInterval(transition, 8000)
+  </script>
+</body>
+</html>
